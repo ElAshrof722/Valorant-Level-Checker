@@ -204,7 +204,7 @@ function handleDone(id, checked, rowEl, timerEl) {
 ═══════════════════════════════════════════════════════ */
 function startTimer(id, compTime, timerEl, rowEl, cb) {
   function tick() {
-    const remaining = MS_H - (Date.now() - compTime);
+    const remaining = MS_24H - (Date.now() - compTime);
     if (remaining <= 0) {
       clearInterval(timers[id]);
       delete timers[id];
@@ -236,7 +236,7 @@ addBtn.addEventListener("click", () => {
     password:      "",
     level:         1,
     xp:            0,
-    xpMax:         1000,
+    xpMax:         5000,
     lastCompleted: null
   };
   accounts.push(acc);

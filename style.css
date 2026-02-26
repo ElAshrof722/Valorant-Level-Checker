@@ -1,0 +1,335 @@
+/* ═══════════════════════════════════════════
+   Account Tracker — Offline Edition
+═══════════════════════════════════════════ */
+
+:root {
+  --bg:         #0c0c0a;
+  --bg2:        #131310;
+  --bg3:        #1a1a16;
+  --surface:    #1e1e18;
+  --surf2:      #252520;
+  --border:     #2c2c24;
+  --border2:    #3a3a30;
+
+  --amber:      #e8a020;
+  --amber-lo:   #9a6810;
+  --amber-glow: rgba(232,160,32,0.10);
+  --amber-faint:rgba(232,160,32,0.04);
+
+  --green:      #4ade80;
+  --green-bg:   rgba(74,222,128,0.07);
+  --red:        #f87171;
+  --red-bg:     rgba(248,113,113,0.10);
+
+  --text:       #cfc49a;
+  --text-dim:   #7a7060;
+  --text-muted: #47453a;
+
+  --mono:  'IBM Plex Mono', monospace;
+  --sans:  'IBM Plex Sans', sans-serif;
+  --r:     4px;
+  --rl:    8px;
+  --ease:  0.14s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px
+  );
+}
+
+/* ── App shell ─────────────────────────────── */
+.app {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 28px 18px 80px;
+}
+
+/* ── Header ────────────────────────────────── */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  font-size: 20px;
+  color: var(--amber);
+  line-height: 1;
+}
+
+h1 {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--amber);
+  text-shadow: 0 0 18px var(--amber-glow);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 11px;
+}
+
+.offline-badge {
+  color: var(--green);
+  letter-spacing: 0.1em;
+  font-size: 10px;
+}
+
+.summary {
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+
+/* ── Toolbar ────────────────────────────────── */
+.toolbar {
+  margin-bottom: 14px;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 8px 16px;
+  border-radius: var(--r);
+  border: 1px solid;
+  cursor: pointer;
+  transition: all var(--ease);
+}
+
+.btn-add {
+  background: var(--amber-faint);
+  border-color: var(--amber-lo);
+  color: var(--amber);
+}
+.btn-add:hover {
+  background: var(--amber-glow);
+  border-color: var(--amber);
+  box-shadow: 0 0 10px var(--amber-glow);
+}
+
+.btn-remove {
+  background: var(--red-bg);
+  border-color: rgba(248,113,113,0.25);
+  color: var(--red);
+  padding: 5px 11px;
+  font-size: 11px;
+}
+.btn-remove:hover {
+  border-color: var(--red);
+  background: rgba(248,113,113,0.16);
+}
+
+/* ── Table ──────────────────────────────────── */
+.table-wrap {
+  width: 100%;
+}
+
+.table-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr 56px 104px 48px;
+  gap: 8px;
+  padding: 5px 14px;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 6px;
+}
+
+/* ── Empty state ────────────────────────────── */
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+.empty-icon {
+  display: block;
+  font-size: 28px;
+  margin-bottom: 12px;
+  opacity: 0.35;
+}
+.empty p { font-size: 12px; line-height: 1.8; }
+.empty strong { color: var(--amber-lo); }
+
+/* ── Account Row ────────────────────────────── */
+.row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--rl);
+  margin-bottom: 5px;
+  overflow: hidden;
+  animation: rowIn 0.18s ease forwards;
+  transition: border-color var(--ease);
+}
+.row:hover { border-color: var(--border2); }
+
+.row.is-done {
+  border-color: rgba(74,222,128,0.18);
+  background: #161a14;
+}
+.row.is-done .row-inner { opacity: 0.85; }
+
+@keyframes rowIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.row-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr 56px 104px 48px;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 14px;
+}
+
+/* ── Inputs ─────────────────────────────────── */
+input[type="text"],
+input[type="number"] {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 5px 8px;
+  width: 100%;
+  outline: none;
+  transition: border-color var(--ease), background var(--ease);
+}
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: var(--amber-lo);
+  background: var(--surf2);
+}
+input[type="number"] { -moz-appearance: textfield; }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+/* ── Level/XP cell ──────────────────────────── */
+.cell-level {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.level-inputs {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.level-inputs input { flex: 1; min-width: 0; }
+.xp-sep {
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.level-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  display: flex;
+  gap: 5px;
+}
+.lv-val { color: var(--amber); font-weight: 600; }
+
+.xp-track {
+  height: 3px;
+  background: var(--surf2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.xp-fill {
+  height: 100%;
+  background: var(--amber);
+  border-radius: 2px;
+  transition: width 0.35s ease;
+  box-shadow: 0 0 5px var(--amber-glow);
+}
+
+/* ── Done checkbox ──────────────────────────── */
+.cell-done {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.done-cb {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--green);
+}
+
+/* ── Timer ──────────────────────────────────── */
+.cell-timer {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.cell-timer.active  { color: var(--amber); }
+.cell-timer.urgent  { color: var(--red); }
+
+/* ── Delete cell ────────────────────────────── */
+.cell-del {
+  display: flex;
+  justify-content: center;
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE — Mobile
+══════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .table-head { display: none; }
+
+  .row-inner {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  /* username col 1 row 1, password col 2 row 1 */
+  .cell-user  { grid-column: 1; grid-row: 1; }
+  .cell-pass  { grid-column: 2; grid-row: 1; }
+  /* level full width row 2 */
+  .cell-level { grid-column: 1 / -1; grid-row: 2; }
+  /* done + timer row 3 */
+  .cell-done  { grid-column: 1; grid-row: 3; justify-content: flex-start; gap: 8px; }
+  .cell-timer { grid-column: 2; grid-row: 3; text-align: right; }
+  /* delete row 4 */
+  .cell-del   { grid-column: 1 / -1; grid-row: 4; justify-content: flex-end; }
+}
+
+/* ── Scrollbar ──────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+::selection { background: var(--amber-glow); color: var(--amber); }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <div class="app">
+
+    <header>
+      <div class="header-left">
+        <span class="logo">⬡</span>
+        <h1>ACCOUNT TRACKER</h1>
+      </div>
+      <div class="header-right">
+        <span class="offline-badge">● OFFLINE</span>
+        <span class="summary" id="summary">0 / 0 done</span>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <button class="btn btn-add" id="addBtn">+ Add Account</button>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-head">
+        <span class="th th-user">USERNAME</span>
+        <span class="th th-pass">PASSWORD</span>
+        <span class="th th-level">LEVEL / XP</span>
+        <span class="th th-done">DONE</span>
+        <span class="th th-timer">RESETS IN</span>
+        <span class="th th-del"></span>
+      </div>
+
+      <div id="accountList">
+        <div class="empty" id="emptyMsg">
+          <span class="empty-icon">◎</span>
+          <p>No accounts yet. Click <strong>+ Add Account</strong> to start.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

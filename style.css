@@ -47,11 +47,111 @@ body {
   );
 }
 
+/* ═══════════════════════════════════════════
+   Notification Banner
+═══════════════════════════════════════════ */
+.notif-banner {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: #1a180e;
+  border-bottom: 1px solid var(--amber-lo);
+  box-shadow: 0 2px 16px rgba(232,160,32,0.08);
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+  animation: slideDown 0.22s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.notif-banner-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.notif-banner-text {
+  flex: 1;
+  color: var(--text-dim);
+}
+
+.btn-notif {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 5px 14px;
+  border-radius: var(--r);
+  border: 1px solid var(--amber-lo);
+  background: var(--amber-faint);
+  color: var(--amber);
+  cursor: pointer;
+  transition: all var(--ease);
+  flex-shrink: 0;
+}
+.btn-notif:hover {
+  background: var(--amber-glow);
+  border-color: var(--amber);
+  box-shadow: 0 0 8px var(--amber-glow);
+}
+
+.notif-dismiss {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: var(--r);
+  transition: color var(--ease);
+  flex-shrink: 0;
+}
+.notif-dismiss:hover { color: var(--text-dim); }
+
+/* ═══════════════════════════════════════════
+   Ready state (cooldown ended)
+═══════════════════════════════════════════ */
+.row.is-ready {
+  border-color: rgba(74,222,128,0.35);
+  background: #111a12;
+}
+
+.cell-timer.ready {
+  color: var(--green);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  animation: readyPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes readyPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+/* Row flash when cooldown ends */
+@keyframes flashGreen {
+  0%   { box-shadow: 0 0 0 0 rgba(74,222,128,0.0);  border-color: rgba(74,222,128,0.35); }
+  30%  { box-shadow: 0 0 0 6px rgba(74,222,128,0.25); border-color: rgba(74,222,128,0.8); }
+  100% { box-shadow: 0 0 0 0 rgba(74,222,128,0.0);  border-color: rgba(74,222,128,0.35); }
+}
+.row.notify-flash {
+  animation: flashGreen 2s ease forwards;
+}
+
 /* ── App shell ─────────────────────────────── */
 .app {
   max-width: 1060px;
   margin: 0 auto;
   padding: 28px 18px 80px;
+  position: relative;
+  z-index: 1;
 }
 
 /* ── Header ────────────────────────────────── */
@@ -308,6 +408,13 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
 @media (max-width: 640px) {
   .table-head { display: none; }
 
+  .notif-banner {
+    flex-wrap: wrap;
+    font-size: 10px;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
   .row-inner {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto auto auto;
@@ -378,10 +485,4 @@ body::before {
     filter: blur(0px);
     -webkit-text-stroke: 1.5px rgba(232, 160, 32, 0.10);
   }
-}
-
-/* Make sure app content sits above the watermark */
-.app {
-  position: relative;
-  z-index: 1;
 }

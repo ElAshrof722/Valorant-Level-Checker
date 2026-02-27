@@ -11,12 +11,66 @@ const addBtn      = document.getElementById("addBtn");
 const accountList = document.getElementById("accountList");
 const emptyMsg    = document.getElementById("emptyMsg");
 const summary     = document.getElementById("summary");
+const notifBanner = document.getElementById("notifBanner");
+const notifBtn    = document.getElementById("notifBtn");
+const notifDismiss= document.getElementById("notifDismiss");
 
 /* ── In-memory data  [ { id, username, password, level, xp, xpMax, lastCompleted } ] */
 let accounts = [];
 
 /* ── Active countdown intervals  { id: intervalId } */
 let timers = {};
+
+/* ═══════════════════════════════════════════════════════
+   Browser Notifications
+═══════════════════════════════════════════════════════ */
+function checkNotifPermission() {
+  if (!("Notification" in window)) {
+    if (notifBanner) notifBanner.style.display = "none";
+    return;
+  }
+  if (Notification.permission === "granted") {
+    if (notifBanner) notifBanner.style.display = "none";
+  } else if (Notification.permission === "denied") {
+    if (notifBanner) notifBanner.style.display = "none";
+  } else {
+    // "default" — show banner
+    if (notifBanner) notifBanner.style.display = "flex";
+  }
+}
+
+function requestNotifPermission() {
+  if (!("Notification" in window)) return;
+  Notification.requestPermission().then(perm => {
+    checkNotifPermission();
+  });
+}
+
+function sendNotification(username) {
+  if (!("Notification" in window)) return;
+  if (Notification.permission !== "granted") return;
+
+  const label = username && username.trim() ? username.trim() : "An account";
+  const notif = new Notification("⬡ Account Tracker", {
+    body: `${label}'s cooldown is over — daily quest is ready!`,
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='28'>⬡</text></svg>",
+    tag:  "account-tracker-" + label,
+    requireInteraction: false,
+  });
+
+  // Auto close after 6 seconds
+  setTimeout(() => notif.close(), 6000);
+}
+
+/* ── Notification banner events ── */
+if (notifBtn) {
+  notifBtn.addEventListener("click", requestNotifPermission);
+}
+if (notifDismiss) {
+  notifDismiss.addEventListener("click", () => {
+    if (notifBanner) notifBanner.style.display = "none";
+  });
+}
 
 /* ═══════════════════════════════════════════════════════
    localStorage helpers
@@ -209,11 +263,21 @@ function startTimer(id, compTime, timerEl, rowEl, cb) {
       clearInterval(timers[id]);
       delete timers[id];
       updateField(id, { lastCompleted: null });
-      timerEl.textContent = "—";
-      timerEl.className = "cell-timer";
+      timerEl.textContent = "READY";
+      timerEl.className = "cell-timer ready";
       cb.checked = false;
       rowEl.classList.remove("is-done");
+      rowEl.classList.add("is-ready");
       updateSummary();
+
+      // 🔔 Fire notification
+      const acc = findById(id);
+      sendNotification(acc ? acc.username : "");
+
+      // Flash row
+      rowEl.classList.add("notify-flash");
+      setTimeout(() => rowEl.classList.remove("notify-flash"), 2000);
+
       return;
     }
     const h = Math.floor(remaining / 3_600_000);
@@ -314,3 +378,4 @@ function debounceInput(inputEl, callback) {
 ═══════════════════════════════════════════════════════ */
 load();
 renderAll();
+checkNotifPermission();

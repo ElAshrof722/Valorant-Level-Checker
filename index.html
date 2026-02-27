@@ -9,8 +9,15 @@
 </head>
 <body>
 
-  <div class="app">
+  <!-- Notification permission banner -->
+  <div class="notif-banner" id="notifBanner" style="display:none;">
+    <span class="notif-banner-icon">🔔</span>
+    <span class="notif-banner-text">Enable notifications to get alerted when an account's cooldown ends</span>
+    <button class="btn btn-notif" id="notifBtn">Enable</button>
+    <button class="notif-dismiss" id="notifDismiss" title="Dismiss">✕</button>
+  </div>
 
+  <div class="app">
     <header>
       <div class="header-left">
         <span class="logo">⬡</span>
@@ -21,11 +28,9 @@
         <span class="summary" id="summary">0 / 0 done</span>
       </div>
     </header>
-
     <div class="toolbar">
       <button class="btn btn-add" id="addBtn">+ Add Account</button>
     </div>
-
     <div class="table-wrap">
       <div class="table-head">
         <span class="th th-user">USERNAME</span>
@@ -35,7 +40,6 @@
         <span class="th th-timer">RESETS IN</span>
         <span class="th th-del"></span>
       </div>
-
       <div id="accountList">
         <div class="empty" id="emptyMsg">
           <span class="empty-icon">◎</span>
@@ -43,9 +47,7 @@
         </div>
       </div>
     </div>
-
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>

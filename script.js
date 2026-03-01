@@ -4,7 +4,7 @@
 ═══════════════════════════════════════════════════════ */
 
 const STORAGE_KEY = "accountTracker_accounts";
-const MS_24H      = 24 * 60 * 60 * 1000;
+const MS_24H      = 22 * 60 * 60 * 1000;
 
 /* ── DOM refs ──────────────────────────────────────── */
 const addBtn      = document.getElementById("addBtn");
